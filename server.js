@@ -37,8 +37,6 @@ container.resolve(function (_,home) {
 
     function ConfigureExpress(app) {
 
-        require('./passport/passport-local');
-        require('./passport/passport-local-admin');
 
 
         app.use(express.static('public'));
@@ -51,13 +49,17 @@ container.resolve(function (_,home) {
         
         app.use(session({
             secret: 'thisisasecretkey',
-            resave: true,
+            resave: false,
             saveUninitialized: true,
             store: new MongoStore({ mongooseConnection: mongoose.connection })
-        }))
+        }))        
+        app.use(session());
         app.use(passport.initialize());
         app.use(passport.session());
+
         app.use(flash());
         app.locals._ = _;
+        require('./passport/passport-local');
+
     }
 });

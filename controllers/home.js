@@ -48,7 +48,7 @@ module.exports = function (_, passport, Admins, Users, async) {
                     return res.render('visitorDash', { user: req.user, data: res1 });
                 })
             }
-            else {
+            else {v
                 res.redirect('/visitorSignup');
             }
         },
@@ -65,8 +65,9 @@ module.exports = function (_, passport, Admins, Users, async) {
         //admin SIGNUP AREA
 
         adminDash: function (req, res) {
+            console.log(req.user);
             if (req.user) {
-                res.render('adminDash', { admin: req.user });
+                res.render('adminDash', { user: req.user });
             }
             else {
                 res.redirect('/adminSignup');
@@ -75,7 +76,7 @@ module.exports = function (_, passport, Admins, Users, async) {
         localadminsignup: function (req, res) {
             res.render('adminSignup');
         },
-        postadminSignUp: passport.authenticate('local.adminSignup', {
+        postadminSignUp: passport.authenticate('local.adminSignup',{
             successRedirect: '/admin',
             failiureRedirect: '/adminSignup',
             failiureFlash: true
