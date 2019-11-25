@@ -9,7 +9,8 @@ const simpleDependancies = [
     ['passport','passport'], 
     ['async','async'],
     ['Users', './models/user'],
-    ['Hosts', './models/host'],
+    ['Admins', './models/admin'],
+    
 ];
 
 simpleDependancies.forEach(function(val){

@@ -5,13 +5,10 @@ const userSchema = mongoose.Schema({
     username: {type: String, default: ''},
     email : {type: String, default : ''},
     password: { type: String, unique: false, default: '' },
-    phone: {typr : String , default :''},
-    time:[{
-        day : {type: String, default: ''},
-        inout : [{
-            in: {type:String, default:''},
-            out:{type:String,default:''}
-        }]
+    phone: {type : String , default :''},
+    past:[{
+        name : {type: String, default: ''},
+        time : {type: String, default: ''}
     }]
 });
 userSchema.methods.encryptPassword = function (password) {

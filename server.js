@@ -38,6 +38,7 @@ container.resolve(function (_,home) {
     function ConfigureExpress(app) {
 
         require('./passport/passport-local');
+        require('./passport/passport-local-admin');
 
 
         app.use(express.static('public'));
