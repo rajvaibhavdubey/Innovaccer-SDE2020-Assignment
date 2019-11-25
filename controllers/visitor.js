@@ -124,22 +124,32 @@ module.exports = function (_, passport, Admins, Users, async) {
                     pass: '@nainitaal'
                 }
             });
-
-            var mailOptions = {
-                from: 'rvdubey.rvd@gmail.com',
-                to: req.body.visitorEmail,
-                subject: 'Check Out',
-                html: '<h1>Hi  ' + req.body.hostEmail + ' </h1><p>Check-Out time : ' + time + '</p>'
-            };
-
-            transporter.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log('Email sent: ' + info.response);
+            var intime;
+            Users.findOne({ email: req.body.visitorEmail }, function (err, visitor) {
+                console.log(visitor);
+                if (visitor) {
+                    intime = visitor.past[visitor.past.length-1].time;
                 }
-            });
-            res.redirect('/');
+                console.log("hey"+intime);
+
+                var mailOptions = {
+                    from: 'rvdubey.rvd@gmail.com',
+                    to: req.body.visitorEmail,
+                    subject: 'Check Out',
+                    html: '<h1>Hi  ' + req.body.hostEmail + ' </h1><p>Check-Out time : ' + time + ' </h1><p>Check-Out time : '+intime+'</p>'
+                };
+    
+                transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+                res.redirect('/visitor/dash');
+            },
+            );
+     
         },
 
         // Check IN
@@ -193,7 +203,7 @@ module.exports = function (_, passport, Admins, Users, async) {
                     console.log('Email sent: ' + info.response);
                 }
             });
-            res.redirect('/');
+            res.redirect('/visitor/dash');
         }
     }
     function getDateTime() {

@@ -12,8 +12,6 @@ const adminSchema = mongoose.Schema({
         email: { type: String, default: '123' },
         phone: { type: String, default: '123' }
     }]
-}, {
-    versionKey: false // You should be aware of the outcome after set to false
 });
 adminSchema.methods.encryptPassword = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
