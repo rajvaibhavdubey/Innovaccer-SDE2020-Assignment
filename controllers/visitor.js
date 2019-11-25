@@ -3,25 +3,54 @@ const nodemailer = require("nodemailer");
 module.exports = function (_, passport, Admins, Users, async) {
     return {
         SetRouting: function (router) {
-            router.get('/', this.visitorDash);
-            router.get('/admin', this.adminDash);
-            router.get('/visitorSignup', this.localVisitorsignup);
-            router.get('/adminSignup', this.localadminsignup);
-            router.get('/pastvisits', this.pastVisit)
+            router.get('/visitor/dash', this.visitorDash)
+            router.get('/visitor/signup', this.localVisitorsignup);
+            router.get('/visitor/dash/past', this.pastVisit);
+            router.get('/logout', this.logout);
+            router.get('/visitor/dash/settings', this.visitorSettings);
 
+            router.post('/visitor/dash/settings/update', this.visitorUpdate);
             router.post('/checkin', this.checkin);
             router.post('/checkout', this.checkout);
-            router.post('/visitorSignup', this.postVisitorSignUp);
-            router.post('/adminSignup', this.postadminSignUp);
+            router.post('/visitor/signup', this.postVisitorSignUp);
+        },
+        visitorUpdate: function (req, res) {
+            async.parallel([
+                function (callback) {
+                    console.log(req.body);
+                    Users.update({
+                        'email': req.body.visitorEmail
+                    }, {
+                        $set: {
+                            "email": req.body.email, 
+                            "username":req.body.username,
+                            "phone":req.body.phone
+                        }
+                    }, (err, count) => {
+                        callback(err, count);
+                    })
+                    res.redirect('/visitor/dash/settings');
+
+                }
+            ])
+        },
+        visitorSettings: function (req, res) {
+            res.render('visitor/visitorSettings', { user: req.user });
+        },
+        logout: function (req, res) {
+            req.logout();
+            req.session.destroy((err) => {
+                res.redirect('/');
+            });
         },
 
         // VISTOR SIGNUP AREA
         pastVisit: function (req, res) {
             if (req.user) {
-                return res.render('pastVisits', { user: req.user });
+                return res.render('visitor/pastVisits', { user: req.user });
             }
             else {
-                res.redirect('/visitorSignup');
+                res.redirect('/visitor/signup');
             }
         },
         visitorDash: function (req, res) {
@@ -45,42 +74,22 @@ module.exports = function (_, passport, Admins, Users, async) {
                     }
 
 
-                    return res.render('visitorDash', { user: req.user, data: res1 });
+                    return res.render('visitor/visitorDash', { user: req.user, data: res1 });
                 })
             }
-            else {v
-                res.redirect('/visitorSignup');
+            else {
+                res.redirect('/visitor/signup');
             }
         },
         localVisitorsignup: function (req, res) {
-            res.render('visitorSignup');
+            res.render('visitor/visitorSignup');
         },
         postVisitorSignUp: passport.authenticate('local.signup', {
-            successRedirect: '/',
-            failiureRedirect: '/visitorSignup',
+            successRedirect: '/visitor/dash',
+            failiureRedirect: '/visitor/signup',
             failiureFlash: true
         }),
 
-
-        //admin SIGNUP AREA
-
-        adminDash: function (req, res) {
-            console.log(req.user);
-            if (req.user) {
-                res.render('adminDash', { user: req.user });
-            }
-            else {
-                res.redirect('/adminSignup');
-            }
-        },
-        localadminsignup: function (req, res) {
-            res.render('adminSignup');
-        },
-        postadminSignUp: passport.authenticate('local.adminSignup',{
-            successRedirect: '/admin',
-            failiureRedirect: '/adminSignup',
-            failiureFlash: true
-        }),
 
         // Check Out
         checkout: function (req, res) {

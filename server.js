@@ -12,7 +12,7 @@ const flash = require('connect-flash');
 const passport = require('passport');
 
 
-container.resolve(function (_,home) {
+container.resolve(function (_,admin,visitor) {
 
     mongoose.Promise = global.Promise;
     mongoose.connect('mongodb://localhost/innoAssign');
@@ -31,12 +31,14 @@ container.resolve(function (_,home) {
 
         //Setup Router
         const router = require('express-promise-router')();
-        home.SetRouting(router);
+        admin.SetRouting(router);
+        visitor.SetRouting(router);
         app.use(router);
     }
 
     function ConfigureExpress(app) {
 
+        require('./passport/passport-local');
 
 
         app.use(express.static('public'));
@@ -49,17 +51,13 @@ container.resolve(function (_,home) {
         
         app.use(session({
             secret: 'thisisasecretkey',
-            resave: false,
+            resave: true,
             saveUninitialized: true,
             store: new MongoStore({ mongooseConnection: mongoose.connection })
-        }))        
-        app.use(session());
+        }))
         app.use(passport.initialize());
         app.use(passport.session());
-
         app.use(flash());
         app.locals._ = _;
-        require('./passport/passport-local');
-
     }
 });
