@@ -22,9 +22,9 @@ module.exports = function (_, passport, Admins, Users, async) {
                         'email': req.body.visitorEmail
                     }, {
                         $set: {
-                            "email": req.body.email, 
-                            "username":req.body.username,
-                            "phone":req.body.phone
+                            "email": req.body.email,
+                            "username": req.body.username,
+                            "phone": req.body.phone
                         }
                     }, (err, count) => {
                         callback(err, count);
@@ -116,6 +116,27 @@ module.exports = function (_, passport, Admins, Users, async) {
                 }
             });
 
+            var accountSid = 'AC41800fe3df40a46a943a341a2d628fad';
+            var authToken = '6d44b8f268ee1de262abf8a1ee081c09';
+            var client = require('twilio')(accountSid, authToken);
+
+            client.messages
+                .create({
+                    body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
+                    from: '+19169933224',
+                    to: '+917355528616'
+                })
+                .then(message => console.log(message.sid));
+
+            var time = getDateTime();
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'rvdubey.rvd@gmail.com',
+                    pass: '@nainitaal'
+                }
+            });
+
             var time = getDateTime();
             var transporter = nodemailer.createTransport({
                 service: 'gmail',
@@ -128,17 +149,17 @@ module.exports = function (_, passport, Admins, Users, async) {
             Users.findOne({ email: req.body.visitorEmail }, function (err, visitor) {
                 console.log(visitor);
                 if (visitor) {
-                    intime = visitor.past[visitor.past.length-1].time;
+                    intime = visitor.past[visitor.past.length - 1].time;
                 }
-                console.log("hey"+intime);
+                console.log("hey" + intime);
 
                 var mailOptions = {
                     from: 'rvdubey.rvd@gmail.com',
                     to: req.body.visitorEmail,
                     subject: 'Check Out',
-                    html: '<h1>Hi  ' + req.body.hostEmail + ' </h1><p>Check-Out time : ' + time + ' </h1><p>Check-Out time : '+intime+'</p>'
+                    html: '<h1>Hi  ' + req.body.hostEmail + ' </h1><p>Check-Out time : ' + time + ' </h1><p>Check-Out time : ' + intime + '</p>'
                 };
-    
+
                 transporter.sendMail(mailOptions, function (error, info) {
                     if (error) {
                         console.log(error);
@@ -149,12 +170,11 @@ module.exports = function (_, passport, Admins, Users, async) {
                 res.redirect('/visitor/dash');
             },
             );
-     
+
         },
 
         // Check IN
         checkin: function (req, res) {
-
 
             Admins.findOne({ email: req.body.hostEmail }, function (err, foundHost) {
                 if (err) {
@@ -179,6 +199,18 @@ module.exports = function (_, passport, Admins, Users, async) {
                 }
             });
 
+
+            var accountSid = 'AC41800fe3df40a46a943a341a2d628fad';
+            var authToken = '6d44b8f268ee1de262abf8a1ee081c09';
+            var client = require('twilio')(accountSid, authToken);
+
+            client.messages
+                .create({
+                    body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
+                    from: '+19169933224',
+                    to: '+917355528616'
+                })
+                .then(message => console.log(message.sid));
 
             var time = getDateTime();
             var transporter = nodemailer.createTransport({

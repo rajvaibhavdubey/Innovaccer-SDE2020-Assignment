@@ -15,10 +15,9 @@ const passport = require('passport');
 container.resolve(function (_,admin,visitor) {
 
     mongoose.Promise = global.Promise;
-    mongoose.connect('mongodb://localhost/innoAssign');
-    //mongoose.connect('mongodb://raj:vaibhav123@ds137600.mlab.com:37600/qrato');
+    //mongoose.connect('mongodb://localhost/innoAssign');
+    mongoose.connect('mongodb://raj:raj123@ds027521.mlab.com:27521/innoassign');
 
-    //mongodb://raj:vaibhav123@ds137600.mlab.com:37600/qrato
     const app = SetupExpress();
 
     function SetupExpress() {
