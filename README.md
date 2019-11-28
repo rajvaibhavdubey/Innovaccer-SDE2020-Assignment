@@ -122,7 +122,7 @@ Server started on port 3000!!!
 ### Visitor
 ![Visitor](https://raw.githubusercontent.com/rajvaibhavdubey/Innovaccer-SDE2020-Assignment/master/screenshots/visitorDB.png)
 
-## Screenshits
+## Screenshots
 - The screenshots for different pages of the app are in screenshots folder
 
 ## Contributions Best Practices
