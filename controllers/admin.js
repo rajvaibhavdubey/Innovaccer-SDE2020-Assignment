@@ -39,6 +39,17 @@ module.exports = function (_, passport, Admins, Users, async) {
                     }, (err, count) => {
                         callback(err, count);
                     })
+                    Users.update({
+                        'email': req.body.visitorEmail
+                    }, {
+                        $set: {
+                            "email": req.body.email, 
+                            "username":req.body.username,
+                            "phone":req.body.phone
+                        }
+                    }, (err, count) => {
+                        callback(err, count);
+                    })
                     res.redirect('/admin/dash/settings');
 
                 }
@@ -57,7 +68,7 @@ module.exports = function (_, passport, Admins, Users, async) {
 
         //admin SIGNUP AREA
 
-        postadminLogin: passport.authenticate('local.Adminlogin', {
+        postadminLogin: passport.authenticate('local.login', {
             successRedirect: '/admin/dash',
             failureRedirect: '/admin/login',
             failureFlash: true

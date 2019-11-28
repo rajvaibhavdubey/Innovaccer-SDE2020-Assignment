@@ -13,10 +13,10 @@ const passport = require('passport');
 
 
 container.resolve(function (_,admin,visitor) {
-
+    require('dotenv').config();
     mongoose.Promise = global.Promise;
-    //mongoose.connect('mongodb://localhost/innoAssign');
-    mongoose.connect('mongodb://raj:raj123@ds027521.mlab.com:27521/innoassign');
+    mongoose.connect('mongodb://localhost/innoAssign');
+    //mongoose.connect(process.env.mlab_url);
 
     const app = SetupExpress();
 

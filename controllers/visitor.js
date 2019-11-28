@@ -1,10 +1,12 @@
 const nodemailer = require("nodemailer");
 
 module.exports = function (_, passport, Admins, Users, async) {
+    require('dotenv').config();
     return {
         SetRouting: function (router) {
             router.get('/visitor/dash', this.visitorDash)
             router.get('/visitor/signup', this.localVisitorsignup);
+            router.get('/visitor/login', this.localVisitorLogin);
             router.get('/visitor/dash/past', this.pastVisit);
             router.get('/logout', this.logout);
             router.get('/visitor/dash/settings', this.visitorSettings);
@@ -13,6 +15,8 @@ module.exports = function (_, passport, Admins, Users, async) {
             router.post('/checkin', this.checkin);
             router.post('/checkout', this.checkout);
             router.post('/visitor/signup', this.postVisitorSignUp);
+            router.post('/visitor/login', this.postVisitorLogin);
+
         },
         visitorUpdate: function (req, res) {
             async.parallel([
@@ -90,7 +94,14 @@ module.exports = function (_, passport, Admins, Users, async) {
             failiureFlash: true
         }),
 
-
+        localVisitorLogin: function (req, res) {
+            res.render('visitor/visitorLogin');
+        },
+        postVisitorLogin: passport.authenticate('local.login', {
+            successRedirect: '/admin/dash',
+            failureRedirect: '/admin/login',
+            failureFlash: true
+        }),
         // Check Out
         checkout: function (req, res) {
 
@@ -116,45 +127,47 @@ module.exports = function (_, passport, Admins, Users, async) {
                 }
             });
 
-            var accountSid = 'AC41800fe3df40a46a943a341a2d628fad';
-            var authToken = '6d44b8f268ee1de262abf8a1ee081c09';
-            var client = require('twilio')(accountSid, authToken);
+            Users.findOne({ email: req.body.hostEmail }, function (err, foundHost) {
+                if (err) {
+                    console.log("An error occured, Description: " + err);
+                } else {
+                    console.log(req.body.visitorEmail);
 
-            client.messages
-                .create({
-                    body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
-                    from: '+19169933224',
-                    to: '+917355528616'
-                })
-                .then(message => console.log(message.sid));
+                    if (foundHost) {
+                        foundHost.past.push({
+                            name: req.body.visitorName,
+                            time: getDateTime(),
+                        });
+                        foundHost.save(function (err, data) {
+                            if (err) {
+                                console.log("An error occured, description: " + err);
+                            }
+                        })
+                    }
+                }
+            });
 
+            var mess = "Thanks for your visit at " + req.body.hostEmail + " .You are now checked out at : " + getDateTime();
+            sendText(mess, req.body.visitorPhone);
+   
             var time = getDateTime();
             var transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                    user: 'rvdubey.rvd@gmail.com',
-                    pass: '@nainitaal'
+                    user: process.env.mail_user,
+                    pass: process.env.mail_pass
                 }
             });
 
-            var time = getDateTime();
-            var transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: 'rvdubey.rvd@gmail.com',
-                    pass: '@nainitaal'
-                }
-            });
             var intime;
             Users.findOne({ email: req.body.visitorEmail }, function (err, visitor) {
                 console.log(visitor);
                 if (visitor) {
                     intime = visitor.past[visitor.past.length - 1].time;
                 }
-                console.log("hey" + intime);
 
                 var mailOptions = {
-                    from: 'rvdubey.rvd@gmail.com',
+                    from: process.env.mail_user,
                     to: req.body.visitorEmail,
                     subject: 'Check Out',
                     html: '<h1>Hi  ' + req.body.hostEmail + ' </h1><p>Check-Out time : ' + time + ' </h1><p>Check-Out time : ' + intime + '</p>'
@@ -198,31 +211,20 @@ module.exports = function (_, passport, Admins, Users, async) {
 
                 }
             });
-
-
-            var accountSid = 'AC41800fe3df40a46a943a341a2d628fad';
-            var authToken = '6d44b8f268ee1de262abf8a1ee081c09';
-            var client = require('twilio')(accountSid, authToken);
-
-            client.messages
-                .create({
-                    body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
-                    from: '+19169933224',
-                    to: '+917355528616'
-                })
-                .then(message => console.log(message.sid));
+            var mess = req.body.visitorName + " has checked in at " + getDateTime();
+            sendText(mess, req.body.visitorPhone);
 
             var time = getDateTime();
             var transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                    user: 'rvdubey.rvd@gmail.com',
-                    pass: '@nainitaal'
+                    user: process.env.mail_user,
+                    pass: process.env.mail_pass
                 }
             });
 
             var mailOptions = {
-                from: 'rvdubey.rvd@gmail.com',
+                from: process.env.mail_user,
                 to: req.body.hostEmail,
                 subject: 'Check In',
                 html: '<table style="width:100%"><tr><th>Visitor Name</th><th>Visitor Email</th><th>Visitor Phone Number</th><th>Check In time</th></tr><tr><td>' + req.body.visitorName + '</td><td>' + req.body.visitorEmail + '</td><td>' + req.body.visitorPhone + '</td><td>' + getDateTime() + '</td></tr></table>'
@@ -260,6 +262,21 @@ module.exports = function (_, passport, Admins, Users, async) {
         day = (day < 10 ? "0" : "") + day;
 
         return year + ":" + month + ":" + day + ":" + hour + ":" + min + ":" + sec;
+
+    }
+
+    function sendText(Text, number) {
+        var accountSid = process.env.accountSid;
+        var authToken = process.env.authToken;
+        var client = require('twilio')(accountSid, authToken);
+
+        client.messages
+            .create({
+                body: Text,
+                from: process.env.test_number,
+                to: number
+            })
+            .then(message => console.log(message.sid));
 
     }
 }

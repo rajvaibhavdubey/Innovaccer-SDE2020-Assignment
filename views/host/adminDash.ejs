@@ -64,36 +64,14 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone Number</th>
-                                    <th>Check-In</th>
-                                    <th>Check-Out</th>
+                                    <th>Time Checkout</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <% _.forEach(user.visitors,function(val){ %>
+                                <% _.forEach(user.past,function(val){ %>
                                 <tr>
-                                    <td><%=val.username%></td>
-                                    <td><%=val.email%></td>
-                                    <td><%=val.phone%></td>
-                                    <td>
-                                        <form action="/checkin" method="POST">
-                                            <input type="hidden" name="hostEmail" id="hostEmail" value="<%=val.email%>">
-                                            <input type="hidden" name="visitorEmail" id="visitorEmail" value="<%=user.email%>">
-                                            <input type="hidden" name="visitorPhone" id="visitorPhone" value="<%=user.phone%>">
-                                            <input type="hidden" name="visitorName" id="visitorName" value="<%=user.name%>">
-
-                                            <button type="submit" class="btn btn-light">Check-in</button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        <form action="/checkout" method="POST">
-                                            <input type="hidden" name="hostEmail" id="hostEmail" value="<%=val.email%>">
-                                            <input type="hidden" name="visitorEmail" id="visitorEmail"
-                                                value="<%=user.email%>">
-                                            <button type="button submit" class="btn btn-dark">Check-out</button>
-                                        </form>
-                                    </td>
+                                    <td><%=val.name%></td>
+                                    <td><%=val.time%></td>
                                 </tr>
                                 <% }) %>
 
