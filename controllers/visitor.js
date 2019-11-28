@@ -132,7 +132,6 @@ module.exports = function (_, passport, Admins, Users, async) {
                     console.log("An error occured, Description: " + err);
                 } else {
                     console.log(req.body.visitorEmail);
-                    console.log("======= "+req.body.hostEmail)
                     if (foundHost) {
                         foundHost.past.push({
                             name: req.body.visitorName,
@@ -170,7 +169,8 @@ module.exports = function (_, passport, Admins, Users, async) {
                     from: process.env.mail_user,
                     to: req.body.visitorEmail,
                     subject: 'Check Out',
-                    html: '<h1>Hi  ' + req.body.hostEmail + ' </h1><p>Check-Out time : ' + time + ' </h1><p>Check-Out time : ' + intime + '</p>'
+                    html: '<table style="width:100%"><tr><th>Visitor Name</th><th>Check-Out Time</th><th>Check In time</th>/tr><tr><td>' + req.body.hostEmail + '</td><td>' + time + '</td><td>' + intime + '</td></tr></table>'
+                    
                 };
 
                 transporter.sendMail(mailOptions, function (error, info) {
