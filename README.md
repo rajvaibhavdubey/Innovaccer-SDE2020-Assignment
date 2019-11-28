@@ -1,5 +1,5 @@
 
-# [Innovaccer HackerCamp '19](https://github.com/rajvaibhavdubey/Innovaccer-SDE2020-Assignment)
+# [Innovaccer HackerCamp '20](https://github.com/rajvaibhavdubey/Innovaccer-SDE2020-Assignment)
 
 ## Assignment for SDE - Intern (Applications)
 
@@ -7,6 +7,17 @@
 - [Innovaccer HackerCamp Homepage](https://www.innovaccer.com/hackercamp)
 - Project [Homepage](https://github.com/rajvaibhavdubey/Innovaccer-SDE2020-Assignment)
 - The Live Project is hosted on heroku [here](https://fast-wildwood-41816.herokuapp.com/)
+
+## Technology Stack
+
+- Node.js
+- MongoDB
+- express routing
+- ejs templating
+- HTML, CSS , JS
+
+> All the dependencies being used are listed in `package.json`.
+
 
 ## Installation
 
@@ -91,3 +102,19 @@ Server started on port 3000!!!
     ├── package.json
 
 ```
+## Features
+### The app supports following features
+
+-   Different Signup and Login for Users and Host, to prevent ghosting
+-   Password encryption at database
+-   Personalized Dashboard for Users and Hosts
+-   Users Dashboard shows hosts available to them , their past visits and a graph of past week. 
+-   Hosts Dashboard shows the users which have visited them
+-   Email and sms feature on check-in and check-out
+-   Updation of credentials from settings
+
+## Database Structure
+
+### Host
+
+### Visitor
