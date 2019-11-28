@@ -15,8 +15,8 @@ const passport = require('passport');
 container.resolve(function (_,admin,visitor) {
     require('dotenv').config();
     mongoose.Promise = global.Promise;
-    mongoose.connect('mongodb://localhost/innoAssign');
-    //mongoose.connect(process.env.mlab_url);
+    //mongoose.connect('mongodb://localhost/innoAssign');
+    mongoose.connect(process.env.mlab_url);
 
     const app = SetupExpress();
 
