@@ -142,3 +142,7 @@ Server started on port 3000!!!
 
 - Before you join development, please set up the system on your local machine and go through the application completely. Press on any link/button you can find and see where it leads to. Explore. (Don't worry ... Nothing will happen to the app or to you due to the exploring :wink: Only thing that will happen is, you'll be more familiar with what is where and might even get some cool ideas on how to improve various aspects of the app.)
 - If you would like to work on an issue, drop in a comment at the issue. If it is already assigned to someone, but there is no sign of any work being done, please free to drop in a comment so that the issue can be assigned to you if the previous assignee has dropped it entirely.
+
+## Bugs and Improvements
+- My twillio account has exceeded its limnit during testing so sms will not be sent
+- Emails have been sent using smtp gmail and can be made more secure
