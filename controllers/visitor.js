@@ -132,7 +132,7 @@ module.exports = function (_, passport, Admins, Users, async) {
                     console.log("An error occured, Description: " + err);
                 } else {
                     console.log(req.body.visitorEmail);
-
+                    console.log("======= "+req.body.hostEmail)
                     if (foundHost) {
                         foundHost.past.push({
                             name: req.body.visitorName,
@@ -148,7 +148,7 @@ module.exports = function (_, passport, Admins, Users, async) {
             });
 
             var mess = "Thanks for your visit at " + req.body.hostEmail + " .You are now checked out at : " + getDateTime();
-            sendText(mess, req.body.visitorPhone);
+            //sendText(mess, req.body.visitorPhone);
    
             var time = getDateTime();
             var transporter = nodemailer.createTransport({
@@ -212,7 +212,7 @@ module.exports = function (_, passport, Admins, Users, async) {
                 }
             });
             var mess = req.body.visitorName + " has checked in at " + getDateTime();
-            sendText(mess, req.body.visitorPhone);
+            //sendText(mess, req.body.visitorPhone);
 
             var time = getDateTime();
             var transporter = nodemailer.createTransport({
